@@ -98,7 +98,7 @@ export const Register = async (req, res) => {
 
 export const Login = async (req, res) => {
   try {
-    // console.log(req.body);
+    console.log(req.body);
     const user = await Users.findAll({
       where: {
         email: req.body.email,
@@ -120,7 +120,7 @@ export const Login = async (req, res) => {
       },
       process.env.ACCESS_TOKEN_SECRET,
       {
-        expiresIn: "1h",
+        expiresIn: "40s",
       }
     );
     const refreshToken = jwt.sign(
@@ -148,10 +148,9 @@ export const Login = async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
-      // secure : true
     });
 
-    res.json({ accessToken });
+    res.status(200).json({ accessToken });
   } catch (error) {
     res.status(404).json({
       msg: "email tidak ditemukan",

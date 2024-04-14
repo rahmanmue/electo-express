@@ -17,7 +17,7 @@ try {
 
   //   menggenerate otomatis db
   //   karena sudah dibuat komenkan lagi
-  //   await Users.sync();
+  // await Users.sync();
   // await Dapil.sync();
   // await SuaraParpol.sync();
 } catch (error) {
@@ -27,7 +27,7 @@ try {
 app.use(
   cors({
     credentials: true,
-    origin: "*",
+    origin: "http://localhost:5173",
   })
 );
 app.use(cookieParser());
