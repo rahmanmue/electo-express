@@ -1,32 +1,45 @@
 import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
-
-const { DataTypes } = Sequelize;
+import User from "./UserModel.js";
 
 const Dapil = db.define(
   "dapil",
   {
+    id: {
+      type: Sequelize.UUID,
+      primaryKey: true,
+      defaultValue: Sequelize.literal("uuid_generate_v4()"),
+    },
     daerah_pemilihan: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     kabupaten_kota: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     provinsi: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     tahun: {
-      type: DataTypes.INTEGER,
+      type: Sequelize.INTEGER,
+      allowNull: false,
     },
     alokasi_kursi: {
-      type: DataTypes.INTEGER,
+      type: Sequelize.INTEGER,
     },
     user_id: {
-      type: DataTypes.INTEGER,
+      type: Sequelize.UUID,
+      references: {
+        model: User,
+        key: "id",
+      },
     },
   },
   {
     freezeTableName: true,
+    timestamps: true,
   }
 );
 
