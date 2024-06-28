@@ -40,7 +40,7 @@ const User = db.define(
       },
     },
     role: {
-      type: Sequelize.STRING,
+      type: Sequelize.ENUM("user", "admin"),
       defaultValue: "user",
     },
     refreshToken: {
