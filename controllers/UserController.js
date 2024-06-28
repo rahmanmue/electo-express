@@ -5,7 +5,7 @@ import {
   deleteUser,
 } from "../services/userService.js";
 
-export const getUsers = async (req, res) => {
+export const getAllUsers = async (req, res) => {
   try {
     const users = await findAllUsers();
     res.status(200).json(users);

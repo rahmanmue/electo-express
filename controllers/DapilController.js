@@ -1,123 +1,59 @@
-import Dapil from "../models/DapilModel.js";
-import Users from "../models/UserModel.js";
+import {
+  findAllDapilByRole,
+  findDapilById,
+  saveDapil,
+  updateDapil,
+  deleteDapil,
+} from "./../services/dapilService.js";
 
 export const getAllDapil = async (req, res) => {
   try {
-    const { user_id } = req.params;
-    const user = await Users.findOne({
-      where: {
-        id: user_id,
-      },
-    });
-
-    let dapil;
-    if (user?.role === "admin") {
-      dapil = await Dapil.findAll({
-        attributes: [
-          "id",
-          "daerah_pemilihan",
-          "daerah_pemilihan",
-          "kabupaten_kota",
-          "provinsi",
-          "tahun",
-          "alokasi_kursi",
-        ],
-      });
-    } else {
-      dapil = await Dapil.findAll({
-        attributes: [
-          "id",
-          "daerah_pemilihan",
-          "daerah_pemilihan",
-          "kabupaten_kota",
-          "provinsi",
-          "tahun",
-          "alokasi_kursi",
-          "user_id",
-        ],
-        where: {
-          user_id: user_id,
-        },
-      });
-    }
+    const dapil = await findAllDapilByRole(req.params.user_id);
     res.status(200).json(dapil);
   } catch (error) {
+    res.status(500).json({ msg: error.message });
     console.error(error);
   }
 };
 
 export const getDapilById = async (req, res) => {
   try {
-    const dapil = await Dapil.findOne({
-      attributes: [
-        "id",
-        "daerah_pemilihan",
-        "daerah_pemilihan",
-        "kabupaten_kota",
-        "provinsi",
-        "tahun",
-        "alokasi_kursi",
-      ],
-      where: {
-        id: req.params.id,
-      },
-    });
+    const dapil = await findDapilById(req.params.id);
     res.status(200).json(dapil);
   } catch (error) {
+    res.status(500).json({ msg: error.message });
     console.error(error);
   }
 };
 
-export const insertDapil = async (req, res) => {
-  const {
-    daerah_pemilihan,
-    kabupaten_kota,
-    provinsi,
-    tahun,
-    alokasi_kursi,
-    user_id,
-  } = req.body;
-
+export const createDapil = async (req, res) => {
   try {
-    await Dapil.create({
-      daerah_pemilihan,
-      kabupaten_kota,
-      provinsi,
-      tahun,
-      alokasi_kursi,
-      user_id,
-    });
-
+    await saveDapil(req.body);
     res.json({
-      msg: "Data Berhasil dimasukan",
+      msg: "Dapil created",
     });
   } catch (error) {
+    res.status(500).json({ msg: error.message });
     console.error(error);
   }
 };
 
 export const updateDapilById = async (req, res) => {
   try {
-    await Dapil.update(req.body, {
-      where: {
-        id: req.params.id,
-      },
-    });
-    res.status(200).json({ msg: "Dapil Updated" });
+    await updateDapil(req.params.id, req.body);
+    res.status(200).json({ msg: "Dapil updated" });
   } catch (error) {
+    res.status(500).json({ msg: error.message });
     console.error(error);
   }
 };
 
 export const deleteDapilById = async (req, res) => {
   try {
-    await Dapil.destroy({
-      where: {
-        id: req.params.id,
-      },
-    });
-    res.status(200).json({ msg: "Dapil Deleted" });
+    await deleteDapil(req.params.id);
+    res.status(200).json({ msg: "Dapil deleted" });
   } catch (error) {
+    res.status(500).json({ msg: error.message });
     console.error(error);
   }
 };
