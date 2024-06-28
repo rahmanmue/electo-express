@@ -3,13 +3,13 @@ import bcrypt from "bcrypt";
 
 export const findAllUsers = async () => {
   return await User.findAll({
-    attributes: ["id", "name", "email"],
+    attributes: ["id", "name", "email", "role"],
   });
 };
 
 export const findUserById = async (userId) => {
   return await User.findOne({
-    attributes: ["id", "name", "email"],
+    attributes: ["id", "name", "email", "role"],
     where: { id: userId },
   });
 };
