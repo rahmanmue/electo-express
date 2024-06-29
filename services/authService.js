@@ -1,17 +1,22 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/UserModel.js";
+import Profile from "../models/ProfileModel.js";
 
 export const registerUser = async (name, email, password, role) => {
   const salt = await bcrypt.genSalt();
   const hashPassword = await bcrypt.hash(password, salt);
 
   try {
-    await User.create({
+    const user = await User.create({
       name,
       email,
       password: hashPassword,
       role,
+    });
+
+    await Profile.create({
+      user_id: user.id,
     });
 
     return { msg: "Register Success" };
@@ -70,17 +75,30 @@ export const loginUser = async (email, password) => {
   return { accessToken, refreshToken };
 };
 
-export const logoutUser = async (userId) => {
-  await User.update(
-    {
-      refreshToken: null,
-    },
-    {
-      where: { id: userId },
-    }
-  );
+export const logoutUser = async (refreshToken) => {
+  try {
+    const user = await User.findOne({
+      where: { refreshToken },
+    });
 
-  return { msg: "logout success" };
+    if (!user) return false;
+
+    const userId = user.id;
+
+    await User.update(
+      {
+        refreshToken: null,
+      },
+      {
+        where: { id: userId },
+      }
+    );
+
+    return true;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
 };
 
 export const refreshTokenUser = async (refreshToken) => {
@@ -91,7 +109,7 @@ export const refreshTokenUser = async (refreshToken) => {
 
     if (!user) return null;
 
-    jwt.verify(
+    const accessToken = jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET,
       (err, decode) => {
@@ -110,6 +128,8 @@ export const refreshTokenUser = async (refreshToken) => {
         return accessToken;
       }
     );
+
+    return accessToken;
   } catch (error) {
     return error;
   }

@@ -1,11 +1,13 @@
 import Dapil from "../models/DapilModel.js";
-import { findUserById } from "./userService.js";
+import User from "../models/UserModel.js";
 
-export const findAllDapilByRole = async (userId) => {
+export const findAllDapilByRole = async (refreshToken) => {
   try {
-    const role = await findUserById(userId).role;
+    const user = await User.findOne({
+      where: { refreshToken },
+    });
 
-    if (role != "admin") {
+    if (user.role != "admin") {
       const dapil = await Dapil.findAll({
         attributes: [
           "id",
@@ -35,7 +37,7 @@ export const findAllDapilByRole = async (userId) => {
       },
       {
         where: {
-          user_id: userId,
+          user_id: user.id,
         },
       }
     );

@@ -42,7 +42,8 @@ export const logout = async (req, res) => {
   if (!refreshToken) return res.sendStatus(204);
 
   try {
-    await logoutUser(refreshToken);
+    const status = await logoutUser(refreshToken);
+    if (!status) return res.sendStatus(204);
     res.clearCookie("refreshToken");
     res.sendStatus(200);
   } catch (error) {
@@ -52,7 +53,7 @@ export const logout = async (req, res) => {
 
 export const refreshToken = async (req, res) => {
   try {
-    const refreshToken = req.cookie.refreshToken;
+    const refreshToken = req.cookies.refreshToken;
     const accessToken = await refreshTokenUser(refreshToken);
     if (accessToken == null) return res.sendStatus(403);
     res.status(200).json({ accessToken });

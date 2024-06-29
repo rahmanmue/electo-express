@@ -8,7 +8,8 @@ import {
 
 export const getAllDapil = async (req, res) => {
   try {
-    const dapil = await findAllDapilByRole(req.params.user_id);
+    const refreshToken = req.cookies.refreshToken;
+    const dapil = await findAllDapilByRole(refreshToken);
     res.status(200).json(dapil);
   } catch (error) {
     res.status(500).json({ msg: error.message });
@@ -28,7 +29,8 @@ export const getDapilById = async (req, res) => {
 
 export const createDapil = async (req, res) => {
   try {
-    await saveDapil(req.body);
+    const data = req.body;
+    await saveDapil(data);
     res.json({
       msg: "Dapil created",
     });
@@ -40,7 +42,8 @@ export const createDapil = async (req, res) => {
 
 export const updateDapilById = async (req, res) => {
   try {
-    await updateDapil(req.params.id, req.body);
+    const data = req.body;
+    await updateDapil(data.id, data);
     res.status(200).json({ msg: "Dapil updated" });
   } catch (error) {
     res.status(500).json({ msg: error.message });

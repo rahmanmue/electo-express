@@ -7,6 +7,7 @@ import cors from "cors";
 import User from "./models/UserModel.js";
 import Dapil from "./models/DapilModel.js";
 import SuaraParpol from "./models/SuaraParpolModel.js";
+import Profile from "./models/ProfileModel.js";
 
 dotenv.config();
 const app = express();
@@ -38,9 +39,10 @@ const checkAndCreateTable = async (model) => {
 (async () => {
   try {
     await db.authenticate();
-    await checkAndCreateTable(User);
-    await checkAndCreateTable(Dapil);
-    await checkAndCreateTable(SuaraParpol);
+    // await checkAndCreateTable(User);
+    // await checkAndCreateTable(Dapil);
+    // await checkAndCreateTable(SuaraParpol);
+    // await checkAndCreateTable(Profile);
     console.log("Database Connected...");
     app.listen(PORT, () => console.log(`Server running at port ${PORT}`));
   } catch (error) {

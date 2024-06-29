@@ -8,13 +8,11 @@ import {
 import { findDapilById } from "../services/dapilService.js";
 import { sainteLagueCalculation } from "../services/sainteLagueService.js";
 
-export const getCalculationSuaraParpolByDapilId = async (req, res) => {
+export const getCalculationSuaraParpol = async (req, res) => {
   try {
-    const suaraParpolDapil = await findAllVoteByDapil(req.params.dapil_id);
-    const dapil = await findDapilById(req.params.dapil_id);
-    // const alokasi_kursi = await dapil.alokasi_kursi;
-    // const calculation = sainteLagueCalculation(suaraParpolDapil, alokasi_kursi);
-    const calculation = sainteLagueCalculation(req.body, req.params.kursi);
+    const votes = await findAllVoteByDapil(req.params.dapil_id);
+    const seatCount = await findDapilById(req.params.dapil_id).alokasi_kursi;
+    const calculation = sainteLagueCalculation(votes, seatCount);
     res.status(200).json(calculation);
   } catch (error) {
     res.status(500).json({ msg: error.message });
@@ -54,7 +52,8 @@ export const createBulkSuaraParpol = async (req, res) => {
 
 export const updateSuaraParpolById = async (req, res) => {
   try {
-    await updateVote(req.params.id, req.body);
+    const data = req.body;
+    await updateVote(data.id, data);
     res.status(200).json({ msg: "Updated" });
   } catch (error) {
     res.status(500).json({ msg: error.message });
