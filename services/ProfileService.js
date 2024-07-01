@@ -1,11 +1,18 @@
 import Profile from "../models/ProfileModel.js";
+import User from "../models/UserModel.js";
 import path from "path";
 import fs from "fs";
 
-export const findProfileById = async (userId) => {
+export const findProfile = async (refreshToken) => {
+  const user = await User.findOne({
+    where: { refreshToken: refreshToken },
+  });
+
+  if (!user) throw new Error("User not found");
+
   return await Profile.findOne({
     attributes: ["id", "user_id", "full_name", "avatar"],
-    where: { user_id: userId },
+    where: { user_id: user.id },
   });
 };
 
@@ -20,7 +27,7 @@ export const updateProfile = async (data) => {
       if (previousAvatar) {
         const fullPath = path.join(
           process.cwd(),
-          "assets/uploads",
+          process.env.UPLOAD_DIR,
           previousAvatar
         );
         if (fs.existsSync(fullPath)) {
@@ -40,7 +47,7 @@ export const updateProfile = async (data) => {
 
 export const getAvatar = (avatar) => {
   return new Promise((resolve, rejects) => {
-    const avatarPath = path.join(process.cwd(), "assets/uploads", avatar);
+    const avatarPath = path.join(process.cwd(), process.env.UPLOAD_DIR, avatar);
 
     if (!fs.existsSync(avatarPath)) {
       rejects({ status: 404, message: "Avatar not found" });

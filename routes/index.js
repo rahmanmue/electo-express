@@ -10,7 +10,7 @@ import {
   login,
   logout,
   refreshToken,
-} from "../controllers/authController.js";
+} from "../controllers/AuthController.js";
 import {
   createDapil,
   getAllDapil,
@@ -18,6 +18,13 @@ import {
   updateDapilById,
   deleteDapilById,
 } from "../controllers/DapilController.js";
+import {
+  getAllParpol,
+  getParpolById,
+  createParpol,
+  updateParpolById,
+  deleteParpolById,
+} from "../controllers/ParpolController.js";
 import {
   createBulkSuaraParpol,
   getSuaraParpolByDapilId,
@@ -29,7 +36,13 @@ import {
 import {
   updateProfileUser,
   getImageAvatar,
+  getProfileUser,
 } from "../controllers/ProfileController.js";
+import {
+  forgetPasswordUser,
+  resetPasswordUser,
+} from "../controllers/ResetPasswordController.js";
+
 import { verifyToken } from "../middlewares/authMiddleware.js";
 import upload from "../middlewares/uploadMiddleware.js";
 
@@ -51,6 +64,12 @@ router.post("/dapil", verifyToken, createDapil);
 router.put("/dapil", verifyToken, updateDapilById);
 router.delete("/dapil/:id", verifyToken, deleteDapilById);
 
+router.get("/parpol", getAllParpol);
+router.get("/parpol/:id", verifyToken, getParpolById);
+router.post("/parpol", verifyToken, createParpol);
+router.put("/parpol", verifyToken, updateParpolById);
+router.delete("/parpol/:id", verifyToken, deleteParpolById);
+
 router.post("/calculation/:seatCount", verifyToken, getCalculationSuaraParpol);
 
 router.get("/parpol/dapil/:dapil_id", verifyToken, getSuaraParpolByDapilId);
@@ -59,7 +78,16 @@ router.put("/parpol/vote", verifyToken, updateSuaraParpolById);
 router.delete("/parpol/vote/:id", verifyToken, deleteSuaraParpolById);
 router.post("/parpol/vote", verifyToken, createBulkSuaraParpol);
 
-router.put("/update-profile", upload.single("avatar"), updateProfileUser);
+router.put(
+  "/update-profile",
+  upload.single("avatar"),
+  verifyToken,
+  updateProfileUser
+);
 router.get("/avatar/:avatar", getImageAvatar);
+router.get("/profile", verifyToken, getProfileUser);
+
+router.post("/forget-password", forgetPasswordUser);
+router.post("/reset-password/:token", resetPasswordUser);
 
 export default router;

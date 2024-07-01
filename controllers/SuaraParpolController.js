@@ -4,9 +4,9 @@ import {
   saveBulkVote,
   updateVote,
   deleteVote,
-} from "../services/suaraParpolService.js";
-import { findDapilById } from "../services/dapilService.js";
-import { sainteLagueCalculation } from "../services/sainteLagueService.js";
+} from "../services/SuaraParpolService.js";
+import { findDapilById } from "../services/DapilService.js";
+import { sainteLagueCalculation } from "../services/SainteLagueService.js";
 
 export const getCalculationSuaraParpol = async (req, res) => {
   try {

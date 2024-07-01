@@ -1,5 +1,5 @@
 import express from "express";
-import db from "./config/Database.js";
+import db from "./config/database.js";
 import router from "./routes/index.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -8,6 +8,7 @@ import User from "./models/UserModel.js";
 import Dapil from "./models/DapilModel.js";
 import SuaraParpol from "./models/SuaraParpolModel.js";
 import Profile from "./models/ProfileModel.js";
+import PasswordResetToken from "./models/ResetPasswordToken.js";
 
 dotenv.config();
 const app = express();
@@ -43,6 +44,7 @@ const checkAndCreateTable = async (model) => {
     // await checkAndCreateTable(Dapil);
     // await checkAndCreateTable(SuaraParpol);
     // await checkAndCreateTable(Profile);
+    // await checkAndCreateTable(PasswordResetToken);
     console.log("Database Connected...");
     app.listen(PORT, () => console.log(`Server running at port ${PORT}`));
   } catch (error) {

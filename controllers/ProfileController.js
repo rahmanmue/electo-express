@@ -1,4 +1,17 @@
-import { updateProfile, getAvatar } from "../services/profileService.js";
+import {
+  updateProfile,
+  getAvatar,
+  findProfile,
+} from "../services/ProfileService.js";
+
+export const getProfileUser = async (req, res) => {
+  try {
+    const profile = await findProfile(req.cookies.refreshToken);
+    res.status(200).json(profile);
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
 
 export const updateProfileUser = async (req, res) => {
   try {

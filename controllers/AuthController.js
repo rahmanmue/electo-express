@@ -3,7 +3,7 @@ import {
   loginUser,
   logoutUser,
   refreshTokenUser,
-} from "../services/authService.js";
+} from "../services/AuthService.js";
 
 export const register = async (req, res) => {
   const { name, email, password, confPassword, role } = req.body;

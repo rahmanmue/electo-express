@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import db from "../config/Database.js";
+import db from "../config/database.js";
 import validator from "validator";
 
 const User = db.define(
@@ -9,6 +9,9 @@ const User = db.define(
       type: Sequelize.UUID,
       primaryKey: true,
       defaultValue: Sequelize.literal("uuid_generate_v4()"),
+    },
+    google_id: {
+      type: Sequelize.STRING,
     },
     name: {
       type: Sequelize.STRING,

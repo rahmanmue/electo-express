@@ -3,7 +3,7 @@ import {
   findUserById,
   updateUser,
   deleteUser,
-} from "../services/userService.js";
+} from "../services/UserService.js";
 
 export const getAllUsers = async (req, res) => {
   try {

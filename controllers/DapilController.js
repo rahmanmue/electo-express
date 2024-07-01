@@ -4,7 +4,7 @@ import {
   saveDapil,
   updateDapil,
   deleteDapil,
-} from "./../services/dapilService.js";
+} from "../services/DapilService.js";
 
 export const getAllDapil = async (req, res) => {
   try {
