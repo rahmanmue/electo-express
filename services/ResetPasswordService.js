@@ -48,7 +48,10 @@ export const forgetPassword = async (email) => {
       }
     });
 
-    return { msg: "Email sent" };
+    return {
+      status: 200,
+      message: "Reset password link sent to your email",
+    };
   } catch (error) {
     console.error(error);
     throw new Error("Internal Server Error");
@@ -75,7 +78,10 @@ export const resetPassword = async (token, password) => {
     user.password = hashPassword;
     await user.save();
 
-    return { msg: "Password reset success" };
+    return {
+      status: 200,
+      message: "Password reset successfully",
+    };
   } catch (error) {
     console.error(error);
     throw new Error("Internal Server Error");

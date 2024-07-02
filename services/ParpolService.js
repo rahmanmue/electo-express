@@ -1,21 +1,41 @@
-import Parpol from "../models/ParpolModel";
+import Parpol from "../models/ParpolModel.js";
 
 export const findAllParpol = async () => {
-  return await Parpol.findAll();
+  const parpol = await Parpol.findAll();
+  return {
+    status: 200,
+    data: parpol,
+  };
 };
 
 export const findParpolById = async (id) => {
-  return await Parpol.findOne({ where: { id: id } });
+  const parpol = await Parpol.findOne({ where: { id: id } });
+  return {
+    status: 200,
+    data: parpol,
+  };
 };
 
 export const saveParpol = async (data) => {
-  return await Parpol.create(data);
+  await Parpol.create(data);
+  return {
+    status: 201,
+    message: "Data successfully created",
+  };
 };
 
 export const updateParpol = async (id, data) => {
-  return await Parpol.update(data, { where: { id: id } });
+  await Parpol.update(data, { where: { id: id } });
+  return {
+    status: 200,
+    message: "Data successfully updated",
+  };
 };
 
 export const deleteParpol = async (id) => {
-  return await Parpol.destroy({ where: { id: id } });
+  await Parpol.destroy({ where: { id: id } });
+  return {
+    status: 204,
+    message: "Data successfully deleted",
+  };
 };

@@ -99,10 +99,13 @@ export const sainteLagueCalculation = (dataSuara, jumlahKursi) => {
   let voteThreshold = totalValidVotes * (4 / 100);
 
   return {
-    finalResults,
-    lastRankVoteResult,
-    totalValidVotes,
-    voteThreshold,
-    sortedResult,
+    status: 200,
+    data: {
+      finalResults,
+      lastRankVoteResult,
+      totalValidVotes,
+      voteThreshold,
+      sortedResult,
+    },
   };
 };

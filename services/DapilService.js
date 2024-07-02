@@ -20,7 +20,10 @@ export const findAllDapilByRole = async (refreshToken) => {
         ],
       });
 
-      return dapil;
+      return {
+        status: 200,
+        data: dapil,
+      };
     }
 
     const dapil = await Dapil.findAll(
@@ -42,15 +45,17 @@ export const findAllDapilByRole = async (refreshToken) => {
       }
     );
 
-    return dapil;
+    return {
+      status: 200,
+      data: dapil,
+    };
   } catch (error) {
-    console.error(error);
-    return { msg: error.message };
+    throw new Error(error.message);
   }
 };
 
 export const findDapilById = async (idDapil) => {
-  return await Dapil.findOne(
+  const dapil = await Dapil.findOne(
     {
       attributes: [
         "id",
@@ -64,16 +69,33 @@ export const findDapilById = async (idDapil) => {
     },
     { where: { id: idDapil } }
   );
+
+  return {
+    status: 200,
+    data: dapil,
+  };
 };
 
 export const saveDapil = async (data) => {
-  return await Dapil.create(data);
+  await Dapil.create(data);
+  return {
+    status: 201,
+    message: "Data successfully created",
+  };
 };
 
 export const updateDapil = async (id, data) => {
-  return await Dapil.update(data, { where: { id: id } });
+  await Dapil.update(data, { where: { id: id } });
+  return {
+    status: 200,
+    message: "Data successfully updated",
+  };
 };
 
 export const deleteDapil = async (id) => {
-  return await Dapil.destroy({ where: { id: id } });
+  await Dapil.destroy({ where: { id: id } });
+  return {
+    status: 204,
+    message: "Data successfully deleted",
+  };
 };

@@ -10,10 +10,15 @@ export const findProfile = async (refreshToken) => {
 
   if (!user) throw new Error("User not found");
 
-  return await Profile.findOne({
+  const profile = await Profile.findOne({
     attributes: ["id", "user_id", "full_name", "avatar"],
     where: { user_id: user.id },
   });
+
+  return {
+    status: 200,
+    data: profile,
+  };
 };
 
 export const updateProfile = async (data) => {
@@ -39,7 +44,10 @@ export const updateProfile = async (data) => {
     profile.full_name = data.full_name;
     profile.save();
 
-    return profile;
+    return {
+      status: 200,
+      message: "Profile updated",
+    };
   } catch (error) {
     throw new Error(error.message);
   }
@@ -62,7 +70,10 @@ export const getAvatar = (avatar) => {
         });
       }
 
-      resolve(data);
+      resolve({
+        status: 200,
+        data: data,
+      });
     });
   });
 };

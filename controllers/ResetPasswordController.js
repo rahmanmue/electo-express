@@ -5,8 +5,8 @@ import {
 
 export const forgetPasswordUser = async (req, res) => {
   try {
-    const msg = await forgetPassword(req.body.email);
-    res.status(200).json(msg);
+    const forget = await forgetPassword(req.body.email);
+    res.status(forget.status).json(forget.message);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
@@ -23,8 +23,8 @@ export const resetPasswordUser = async (req, res) => {
           .status(400)
           .json({ msg: "Password and confirm password do not match" });
       }
-      const msg = await resetPassword(token, password);
-      res.status(200).json(msg);
+      const reset = await resetPassword(token, password);
+      res.status(reset.status).json(reset.message);
     } catch (error) {
       res.status(500).json({ msg: error.message });
     }

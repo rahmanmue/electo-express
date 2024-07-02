@@ -9,7 +9,7 @@ import {
 export const getAllParpol = async (req, res) => {
   try {
     const parpols = await findAllParpol();
-    res.status(200).json(parpols);
+    res.status(parpols.status).json(parpols.data);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
@@ -18,7 +18,7 @@ export const getAllParpol = async (req, res) => {
 export const getParpolById = async (req, res) => {
   try {
     const parpol = await findParpolById(req.params.id);
-    res.status(200).json(parpol);
+    res.status(parpol.status).json(parpol.data);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
@@ -26,11 +26,8 @@ export const getParpolById = async (req, res) => {
 
 export const createParpol = async (req, res) => {
   try {
-    const data = req.body;
-    await saveParpol(data);
-    res.json({
-      msg: "Parpol created",
-    });
+    const saved = await saveParpol(req.body);
+    res.status(saved.status).json(saved.message);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
@@ -38,9 +35,8 @@ export const createParpol = async (req, res) => {
 
 export const updateParpolById = async (req, res) => {
   try {
-    const data = req.body;
-    await updateParpol(data.id, data);
-    res.status(200).json({ msg: "Parpol updated" });
+    const updated = await updateParpol(req.body.id, req.body);
+    res.status(updated.status).json(updated.message);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
@@ -48,8 +44,8 @@ export const updateParpolById = async (req, res) => {
 
 export const deleteParpolById = async (req, res) => {
   try {
-    await deleteParpol(req.params.id);
-    res.status(200).json({ msg: "Parpol deleted" });
+    const deleted = await deleteParpol(req.params.id);
+    res.status(deleted.status).json(deleted.message);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }

@@ -6,6 +6,8 @@ import {
   deleteUserById,
 } from "../controllers/UserController.js";
 import {
+  loginGoogle,
+  loginGoogleCallback,
   register,
   login,
   logout,
@@ -26,6 +28,7 @@ import {
   deleteParpolById,
 } from "../controllers/ParpolController.js";
 import {
+  importFromExcel,
   createBulkSuaraParpol,
   getSuaraParpolByDapilId,
   getSuaraParpolById,
@@ -45,6 +48,7 @@ import {
 
 import { verifyToken } from "../middlewares/authMiddleware.js";
 import upload from "../middlewares/uploadMiddleware.js";
+import uploadExcel from "../middlewares/uploadExcelMiddleware.js";
 
 const router = express.Router();
 
@@ -84,10 +88,17 @@ router.put(
   verifyToken,
   updateProfileUser
 );
+
+router.post("/import-excel", uploadExcel.single("document"), importFromExcel);
+
 router.get("/avatar/:avatar", getImageAvatar);
 router.get("/profile", verifyToken, getProfileUser);
 
 router.post("/forget-password", forgetPasswordUser);
 router.post("/reset-password/:token", resetPasswordUser);
+
+router.get("/google", loginGoogle);
+
+router.get("/google/callback", loginGoogleCallback);
 
 export default router;
