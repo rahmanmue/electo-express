@@ -10,9 +10,6 @@ const User = db.define(
       primaryKey: true,
       defaultValue: Sequelize.literal("uuid_generate_v4()"),
     },
-    google_id: {
-      type: Sequelize.STRING,
-    },
     name: {
       type: Sequelize.STRING,
       allowNull: false,
@@ -27,14 +24,14 @@ const User = db.define(
     },
     password: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         len: {
           args: [6, 255],
           msg: "Password minimal 6 karakter",
         },
         isValidPassword(value) {
-          if (!validator.isStrongPassword(value)) {
+          if (value !== null && !validator.isStrongPassword(value)) {
             throw new Error(
               "Password harus mengandung setidaknya satu huruf besar, satu huruf kecil, satu angka, dan satu karakter khusus"
             );
