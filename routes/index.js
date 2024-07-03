@@ -74,7 +74,7 @@ router.post("/parpol", verifyToken, createParpol);
 router.put("/parpol", verifyToken, updateParpolById);
 router.delete("/parpol/:id", verifyToken, deleteParpolById);
 
-router.post("/calculation/:seatCount", verifyToken, getCalculationSuaraParpol);
+router.get("/calculation/:dapil_id", verifyToken, getCalculationSuaraParpol);
 
 router.get("/parpol/dapil/:dapil_id", verifyToken, getSuaraParpolByDapilId);
 router.get("/parpol/vote/:id", verifyToken, getSuaraParpolById);
