@@ -6,6 +6,7 @@ import { authorizationUrl, oauth2Client } from "../config/oauth2Config.js";
 import { google } from "googleapis";
 
 const saveTokenUser = async (data) => {
+  console.log(data);
   const accessToken = jwt.sign(
     { userId: data.id, name: data.name, email: data.email, role: data.role },
     process.env.ACCESS_TOKEN_SECRET,
@@ -54,8 +55,6 @@ export const googleLoginCallback = async (code) => {
       where: { email: data.email },
     });
 
-    let profile;
-
     if (!user) {
       user = await User.create({
         name: data.name,
@@ -63,22 +62,11 @@ export const googleLoginCallback = async (code) => {
         password: null,
       });
 
-      profile = await Profile.create({
+      await Profile.create({
         full_name: data.name,
         user_id: user.id,
         avatar: data.picture,
       });
-    } else {
-      profile = await Profile.findOne({ where: { user_id: user.id } });
-      if (user.name != data.name) {
-        user.name = data.name;
-        await user.save();
-      }
-
-      if (profile.avatar != data.picture) {
-        profile.avatar = data.picture;
-        await profile.save();
-      }
     }
 
     const token = await saveTokenUser(user);
@@ -117,7 +105,7 @@ export const registerUser = async (name, email, password, role) => {
     if (error.name === "SequelizeUniqueConstraintError") {
       throw new Error("Email already used");
     } else {
-      throw new Error("Internal Server Error");
+      throw new Error(error.message);
     }
   }
 };
@@ -151,11 +139,16 @@ export const loginUser = async (email, password) => {
 
 export const logoutUser = async (refreshToken) => {
   try {
+    console.log("refreshToken : ", refreshToken);
     const user = await User.findOne({
-      where: { refreshToken },
+      where: {
+        refreshToken: refreshToken,
+      },
     });
 
-    if (!user) return false;
+    console.log("user", user);
+
+    if (!user) return null;
 
     await User.update(
       {
@@ -167,7 +160,7 @@ export const logoutUser = async (refreshToken) => {
     );
 
     return {
-      status: 200,
+      status: 204,
       message: "Logout successfully",
     };
   } catch (error) {
@@ -178,7 +171,7 @@ export const logoutUser = async (refreshToken) => {
 export const refreshTokenUser = async (refreshToken) => {
   try {
     const user = await User.findOne({
-      where: { refreshToken },
+      where: { refreshToken: refreshToken },
     });
 
     if (!user) return null;

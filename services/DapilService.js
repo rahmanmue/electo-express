@@ -7,11 +7,10 @@ export const findAllDapilByRole = async (refreshToken) => {
       where: { refreshToken },
     });
 
-    if (user.role != "admin") {
+    if (user?.role != "admin") {
       const dapil = await Dapil.findAll({
         attributes: [
           "id",
-          "daerah_pemilihan",
           "daerah_pemilihan",
           "kabupaten_kota",
           "provinsi",
@@ -30,7 +29,6 @@ export const findAllDapilByRole = async (refreshToken) => {
       {
         attributes: [
           "id",
-          "daerah_pemilihan",
           "daerah_pemilihan",
           "kabupaten_kota",
           "provinsi",
@@ -59,7 +57,6 @@ export const findDapilById = async (idDapil) => {
     {
       attributes: [
         "id",
-        "daerah_pemilihan",
         "daerah_pemilihan",
         "kabupaten_kota",
         "provinsi",

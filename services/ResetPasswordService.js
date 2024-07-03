@@ -6,9 +6,12 @@ import bcrypt from "bcrypt";
 
 export const forgetPassword = async (email) => {
   try {
+    console.log(email);
     const user = await User.findOne({
       where: { email },
     });
+
+    console.log(user);
 
     if (!user) throw new Error("User not found");
 
@@ -54,7 +57,7 @@ export const forgetPassword = async (email) => {
     };
   } catch (error) {
     console.error(error);
-    throw new Error("Internal Server Error");
+    throw new Error(error.message);
   }
 };
 
@@ -84,6 +87,6 @@ export const resetPassword = async (token, password) => {
     };
   } catch (error) {
     console.error(error);
-    throw new Error("Internal Server Error");
+    throw new Error(error.message);
   }
 };

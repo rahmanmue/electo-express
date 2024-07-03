@@ -1,6 +1,8 @@
 export const sainteLagueCalculation = (dataSuara, jumlahKursi) => {
   const rounded = (n) => (Math.round(n * 100) / 100).toFixed(0);
 
+  console.log(dataSuara);
+
   // variabel menyimpan data array sementara
   let calculationResults = [];
   let sortedResult = [];
@@ -92,7 +94,7 @@ export const sainteLagueCalculation = (dataSuara, jumlahKursi) => {
   let lastRankVoteResult = sortedResult[jumlahKursi - 1]?.hasilSainteLague;
 
   // total suara sah
-  const totalValidVotes = dataSuara.reduce((prev, curr) => {
+  const totalValidVotes = dataSuara?.reduce((prev, curr) => {
     return prev + curr.total_suara_sah;
   }, 0);
 

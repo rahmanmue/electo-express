@@ -1,6 +1,7 @@
 import SuaraParpol from "../models/SuaraParpolModel.js";
 import path from "path";
 import { validateExcelFile } from "./ExcelValidationService.js";
+import fs from "fs";
 
 export const saveFromExcel = async (data) => {
   try {
@@ -31,16 +32,12 @@ export const saveFromExcel = async (data) => {
 };
 
 export const findAllVoteByDapil = async (idDapil) => {
-  const suaraParpol = await SuaraParpol.findAll(
-    {
-      attributes: ["id", "nama_parpol", "total_suara_sah"],
+  const suaraParpol = await SuaraParpol.findAll({
+    attributes: ["id", "nama_parpol", "total_suara_sah"],
+    where: {
+      daerah_pemilihan_id: idDapil,
     },
-    {
-      where: {
-        daerah_pemilihan_id: idDapil,
-      },
-    }
-  );
+  });
 
   return {
     status: 200,

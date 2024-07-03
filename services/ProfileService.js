@@ -72,7 +72,7 @@ export const getAvatar = (avatar) => {
 
       resolve({
         status: 200,
-        data: data,
+        data,
       });
     });
   });
