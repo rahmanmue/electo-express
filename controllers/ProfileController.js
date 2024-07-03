@@ -7,7 +7,7 @@ import {
 export const getProfileUser = async (req, res) => {
   try {
     const profile = await findProfile(req.cookies.refreshToken);
-    res.status(profile.status).json(profile.data);
+    res.status(profile.status).json(profile);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
@@ -22,7 +22,7 @@ export const updateProfileUser = async (req, res) => {
     };
 
     const updated = await updateProfile(data);
-    res.status(updated.status).json(updated.message);
+    res.status(updated.status).json(updated);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
@@ -34,7 +34,7 @@ export const getImageAvatar = async (req, res) => {
       .then((data) => {
         res.writeHead(data.status, {
           "Content-Type": "image/png",
-          "Content-Length": data.length,
+          "Content-Length": data.data.length,
         });
         res.end(data.data);
       })
