@@ -26,7 +26,7 @@ export const loginGoogleCallback = async (req, res) => {
       accessToken: token.accessToken,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -36,14 +36,18 @@ export const register = async (req, res) => {
   if (password != confPassword) {
     return res
       .status(400)
-      .json({ msg: "Password and Confirm Password do not match" });
+      .json({ message: "Password and Confirm Password do not match" });
   }
 
   try {
     const response = await registerUser(name, email, password, role);
     res.status(response.status).json(response);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    if (error.message === "Email already used") {
+      return res.status(409).json({ message: error.message });
+    } else {
+      return res.status(500).json({ message: error.message });
+    }
   }
 };
 
@@ -51,7 +55,7 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const { status, token } = await loginUser(email, password);
+    const { status, token, role } = await loginUser(email, password);
     res.cookie("refreshToken", token.refreshToken, {
       httpOnly: true,
       maxAge: process.env.MAX_AGE_COOKIE * 60 * 60 * 1000,
@@ -60,7 +64,14 @@ export const login = async (req, res) => {
       accessToken: token.accessToken,
     });
   } catch (error) {
-    res.status(400).json({ msg: error.message });
+    if (
+      error.message === "Email not found" ||
+      error.message === "Wrong Password"
+    ) {
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: error.message });
+    }
   }
 };
 
@@ -73,7 +84,11 @@ export const logout = async (req, res) => {
     res.clearCookie("refreshToken");
     res.sendStatus(response.status);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    if (error.message === "User not found") {
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: error.message });
+    }
   }
 };
 
@@ -86,7 +101,10 @@ export const refreshToken = async (req, res) => {
       accessToken: response.accessToken,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: error.message });
+    if (error.message === "User not found") {
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: error.message });
+    }
   }
 };

@@ -12,8 +12,7 @@ export const getAllDapil = async (req, res) => {
     const dapils = await findAllDapilByRole(refreshToken);
     res.status(dapils.status).json(dapils);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
-    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -22,8 +21,7 @@ export const getDapilById = async (req, res) => {
     const dapil = await findDapilById(req.params.id);
     res.status(dapil.status).json(dapil);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
-    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -32,8 +30,7 @@ export const createDapil = async (req, res) => {
     const saved = await saveDapil(req.body);
     res.status(saved.status).json(saved);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
-    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -42,8 +39,7 @@ export const updateDapilById = async (req, res) => {
     const updated = await updateDapil(req.body.id, req.body);
     res.status(updated.status).json(updated);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
-    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -52,7 +48,6 @@ export const deleteDapilById = async (req, res) => {
     const deleted = await deleteDapil(req.params.id);
     res.sendStatus(deleted.status);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
-    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 };

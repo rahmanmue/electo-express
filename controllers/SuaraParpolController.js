@@ -14,7 +14,7 @@ export const importFromExcel = async (req, res) => {
     const fileName = req.file ? req.file.filename : null;
     const id_dapil = req.body.id_dapil;
 
-    if (!fileName) return res.status(400).json({ msg: "File not found" });
+    if (!fileName) return res.status(400).json({ message: "File not found" });
 
     const response = await saveFromExcel({
       fileName: fileName,
@@ -23,8 +23,11 @@ export const importFromExcel = async (req, res) => {
 
     res.status(response.status).json(response);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
-    console.error(error);
+    if (error.message === "File is empty") {
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: error.message });
+    }
   }
 };
 
@@ -36,8 +39,7 @@ export const getCalculationSuaraParpol = async (req, res) => {
     const calculation = sainteLagueCalculation(votes.data, seatCount);
     res.status(calculation.status).json(calculation);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
-    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -46,8 +48,7 @@ export const getSuaraParpolByDapilId = async (req, res) => {
     const suaraParpolDapil = await findAllVoteByDapil(req.params.dapil_id);
     res.status(suaraParpolDapil.status).json(suaraParpolDapil);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
-    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -56,8 +57,7 @@ export const getSuaraParpolById = async (req, res) => {
     const suaraParpol = await findVoteById(req.params.id);
     res.status(suaraParpol.status).json(suaraParpol);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
-    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -66,8 +66,7 @@ export const createBulkSuaraParpol = async (req, res) => {
     const saved = await saveBulkVote(req.body);
     res.status(saved.status).json(saved);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
-    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -76,8 +75,7 @@ export const updateSuaraParpolById = async (req, res) => {
     const updated = await updateVote(req.body.id, req.body);
     res.status(updated.status).json(updated);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
-    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -86,7 +84,6 @@ export const deleteSuaraParpolById = async (req, res) => {
     const deleted = await deleteVote(req.params.id);
     res.sendStatus(deleted.status);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
-    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 };

@@ -9,7 +9,11 @@ export const getProfileUser = async (req, res) => {
     const profile = await findProfile(req.cookies.refreshToken);
     res.status(profile.status).json(profile);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    if (error.message === "User not found") {
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: error.message });
+    }
   }
 };
 
@@ -24,7 +28,11 @@ export const updateProfileUser = async (req, res) => {
     const updated = await updateProfile(data);
     res.status(updated.status).json(updated);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    if (error.message === "Profile not found") {
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: error.message });
+    }
   }
 };
 
@@ -40,13 +48,12 @@ export const getImageAvatar = async (req, res) => {
       })
       .catch((error) => {
         if (error.status === 404) {
-          res.status(error.status).json({ msg: error.message });
+          res.status(error.status).json({ message: error.message });
         } else {
-          res.status(500).json({ msg: error.message });
+          res.status(500).json({ message: error.message });
         }
       });
   } catch (error) {
-    res.status(500).json({ msg: error.message });
-    console.log(error);
+    res.status(500).json({ message: error.message });
   }
 };
