@@ -6,12 +6,9 @@ import bcrypt from "bcrypt";
 
 export const forgetPassword = async (email) => {
   try {
-    console.log(email);
     const user = await User.findOne({
       where: { email },
     });
-
-    console.log(user);
 
     if (!user) throw new Error("User not found");
 
@@ -46,7 +43,6 @@ export const forgetPassword = async (email) => {
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.error(error);
         throw new Error("Failed to send email");
       }
     });
@@ -56,7 +52,6 @@ export const forgetPassword = async (email) => {
       message: "Reset password link sent to your email",
     };
   } catch (error) {
-    console.error(error);
     throw new Error(error.message);
   }
 };
@@ -86,7 +81,6 @@ export const resetPassword = async (token, password) => {
       message: "Password reset successfully",
     };
   } catch (error) {
-    console.error(error);
     throw new Error(error.message);
   }
 };

@@ -1,8 +1,6 @@
 export const sainteLagueCalculation = (dataSuara, jumlahKursi) => {
   const rounded = (n) => (Math.round(n * 100) / 100).toFixed(0);
 
-  console.log(dataSuara);
-
   // variabel menyimpan data array sementara
   let calculationResults = [];
   let sortedResult = [];

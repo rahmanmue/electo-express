@@ -6,7 +6,6 @@ import { authorizationUrl, oauth2Client } from "../config/oauth2Config.js";
 import { google } from "googleapis";
 
 const saveTokenUser = async (data) => {
-  console.log(data);
   const accessToken = jwt.sign(
     { userId: data.id, name: data.name, email: data.email, role: data.role },
     process.env.ACCESS_TOKEN_SECRET,
@@ -101,7 +100,6 @@ export const registerUser = async (name, email, password, role) => {
       message: "User created successfully",
     };
   } catch (error) {
-    console.error(error);
     if (error.name === "SequelizeUniqueConstraintError") {
       throw new Error("Email already used");
     } else {
@@ -117,7 +115,7 @@ export const loginUser = async (email, password) => {
     });
 
     if (!user) {
-      throw new Error("User not found");
+      throw new Error("Email not found");
     }
 
     const match = await bcrypt.compare(password, user.password);
@@ -139,16 +137,13 @@ export const loginUser = async (email, password) => {
 
 export const logoutUser = async (refreshToken) => {
   try {
-    console.log("refreshToken : ", refreshToken);
     const user = await User.findOne({
       where: {
         refreshToken: refreshToken,
       },
     });
 
-    console.log("user", user);
-
-    if (!user) return null;
+    if (!user) throw new Error("User not found");
 
     await User.update(
       {
@@ -174,7 +169,7 @@ export const refreshTokenUser = async (refreshToken) => {
       where: { refreshToken: refreshToken },
     });
 
-    if (!user) return null;
+    if (!user) throw new Error("User not found");
 
     const accessToken = jwt.verify(
       refreshToken,
