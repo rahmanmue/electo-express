@@ -9,6 +9,7 @@ import Dapil from "./models/DapilModel.js";
 import SuaraParpol from "./models/SuaraParpolModel.js";
 import Profile from "./models/ProfileModel.js";
 import PasswordResetToken from "./models/ResetPasswordToken.js";
+import "./models/Association.js";
 
 dotenv.config();
 const app = express();
@@ -24,30 +25,14 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(router);
 
-const checkAndCreateTable = async (model) => {
-  const tableName = model.getTableName();
-  const tableExists = await db
-    .getQueryInterface()
-    .showAllSchemas({ where: { table_name: tableName } });
-  if (!tableExists.length) {
-    await model.sync({ alter: true });
-    console.log(`Table ${tableName} created.`);
-  } else {
-    console.log(`Table ${tableName} already exists.`);
+const main = async () => {
+  try {
+    await db.sync();
+    console.log("Database connected");
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  } catch (err) {
+    console.log(err);
   }
 };
 
-(async () => {
-  try {
-    await db.authenticate();
-    // await checkAndCreateTable(User);
-    // await checkAndCreateTable(Dapil);
-    // await checkAndCreateTable(SuaraParpol);
-    // await checkAndCreateTable(Profile);
-    // await checkAndCreateTable(PasswordResetToken);
-    console.log("Database Connected...");
-    app.listen(PORT, () => console.log(`Server running at port ${PORT}`));
-  } catch (error) {
-    console.log(error);
-  }
-})();
+main();

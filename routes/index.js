@@ -16,6 +16,7 @@ import {
 import {
   createDapil,
   getAllDapil,
+  searchDapil,
   getDapilById,
   updateDapilById,
   deleteDapilById,
@@ -47,6 +48,7 @@ import {
 } from "../controllers/ResetPasswordController.js";
 
 import { verifyToken } from "../middlewares/authMiddleware.js";
+import { verifyAdmin } from "../middlewares/verifyAdmin.js";
 import upload from "../middlewares/uploadMiddleware.js";
 import uploadExcel from "../middlewares/uploadExcelMiddleware.js";
 
@@ -60,9 +62,10 @@ router.delete("/auth/logout", logout);
 router.get("/users", getAllUsers);
 router.get("/users/:id", verifyToken, getUserById);
 router.patch("/users", verifyToken, updateUserById);
-router.delete("/users/:id", verifyToken, deleteUserById);
+router.delete("/users/:id", verifyToken, verifyAdmin, deleteUserById);
 
 router.get("/dapil", getAllDapil);
+router.get("/dapil/search", verifyToken, searchDapil);
 router.get("/dapil/:id", verifyToken, getDapilById);
 router.post("/dapil", verifyToken, createDapil);
 router.put("/dapil", verifyToken, updateDapilById);
@@ -70,7 +73,7 @@ router.delete("/dapil/:id", verifyToken, deleteDapilById);
 
 router.get("/parpol", getAllParpol);
 router.get("/parpol/:id", verifyToken, getParpolById);
-router.post("/parpol", verifyToken, createParpol);
+router.post("/parpol", verifyToken, verifyAdmin, createParpol);
 router.put("/parpol", verifyToken, updateParpolById);
 router.delete("/parpol/:id", verifyToken, deleteParpolById);
 
