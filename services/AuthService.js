@@ -4,7 +4,7 @@ import User from "../models/UserModel.js";
 import Profile from "../models/ProfileModel.js";
 import { authorizationUrl, oauth2Client } from "../config/oauth2Config.js";
 import { google } from "googleapis";
-import { Sequelize } from "sequelize";
+import db from "../config/database.js";
 
 const saveTokenUser = async (data) => {
   const accessToken = jwt.sign(
@@ -40,7 +40,7 @@ export const googleAuthorization = () => {
 };
 
 export const googleLoginCallback = async (code) => {
-  const transaction = await Sequelize.transaction();
+  const transaction = await db.transaction();
   try {
     const { tokens } = await oauth2Client.getToken(code);
     oauth2Client.setCredentials(tokens);
@@ -54,7 +54,7 @@ export const googleLoginCallback = async (code) => {
 
     let user = await User.findOne({
       where: { email: data.email },
-      transaction,
+      transaction: transaction,
     });
 
     if (!user) {
@@ -65,7 +65,7 @@ export const googleLoginCallback = async (code) => {
           password: null,
         },
         {
-          transaction,
+          transaction: transaction,
         }
       );
 
@@ -76,7 +76,7 @@ export const googleLoginCallback = async (code) => {
           avatar: data.picture,
         },
         {
-          transaction,
+          transaction: transaction,
         }
       );
 
@@ -96,7 +96,7 @@ export const googleLoginCallback = async (code) => {
 };
 
 export const registerUser = async (name, email, password, role) => {
-  const transaction = await Sequelize.transaction();
+  const transaction = await db.transaction();
 
   const salt = await bcrypt.genSalt();
   const hashPassword = await bcrypt.hash(password, salt);
@@ -110,7 +110,7 @@ export const registerUser = async (name, email, password, role) => {
         role,
       },
       {
-        transaction,
+        transaction: transaction,
       }
     );
 
@@ -119,7 +119,7 @@ export const registerUser = async (name, email, password, role) => {
         user_id: user.id,
       },
       {
-        transaction,
+        transaction: transaction,
       }
     );
 
