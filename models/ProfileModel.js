@@ -32,15 +32,4 @@ const Profile = db.define(
   }
 );
 
-User.hasOne(Profile, {
-  foreignKey: "user_id",
-  onDelete: "CASCADE",
-  onUpdate: "CASCADE",
-});
-Profile.belongsTo(User, {
-  foreignKey: "user_id",
-  onDelete: "CASCADE",
-  onUpdate: "CASCADE",
-});
-
 export default Profile;

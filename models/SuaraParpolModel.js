@@ -31,10 +31,4 @@ const SuaraParpol = db.define(
   }
 );
 
-Dapil.hasMany(SuaraParpol, {
-  foreignKey: "daerah_pemilihan_id",
-  onDelete: "CASCADE",
-  onUpdate: "CASCADE",
-});
-
 export default SuaraParpol;
