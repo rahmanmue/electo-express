@@ -1,5 +1,6 @@
 import {
   findAllDapilByRole,
+  filterDapilByKeyword,
   findDapilById,
   saveDapil,
   updateDapil,
@@ -9,7 +10,27 @@ import {
 export const getAllDapil = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
-    const dapils = await findAllDapilByRole(refreshToken);
+    const page = req.query.page;
+    const pageSize = req.query.pageSize;
+    const dapils = await findAllDapilByRole(refreshToken, page, pageSize);
+    res.status(dapils.status).json(dapils);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const searchDapil = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    const page = req.query.page;
+    const pageSize = req.query.pageSize;
+    const keyword = req.query.keyword;
+    const dapils = await filterDapilByKeyword(
+      refreshToken,
+      keyword,
+      page,
+      pageSize
+    );
     res.status(dapils.status).json(dapils);
   } catch (error) {
     res.status(500).json({ message: error.message });
