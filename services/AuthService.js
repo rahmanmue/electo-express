@@ -4,6 +4,7 @@ import User from "../models/UserModel.js";
 import Profile from "../models/ProfileModel.js";
 import { authorizationUrl, oauth2Client } from "../config/oauth2Config.js";
 import { google } from "googleapis";
+import { Sequelize } from "sequelize";
 
 const saveTokenUser = async (data) => {
   const accessToken = jwt.sign(
@@ -39,6 +40,7 @@ export const googleAuthorization = () => {
 };
 
 export const googleLoginCallback = async (code) => {
+  const transaction = await Sequelize.transaction();
   try {
     const { tokens } = await oauth2Client.getToken(code);
     oauth2Client.setCredentials(tokens);
@@ -52,20 +54,33 @@ export const googleLoginCallback = async (code) => {
 
     let user = await User.findOne({
       where: { email: data.email },
+      transaction,
     });
 
     if (!user) {
-      user = await User.create({
-        name: data.name,
-        email: data.email,
-        password: null,
-      });
+      user = await User.create(
+        {
+          name: data.name,
+          email: data.email,
+          password: null,
+        },
+        {
+          transaction,
+        }
+      );
 
-      await Profile.create({
-        full_name: data.name,
-        user_id: user.id,
-        avatar: data.picture,
-      });
+      await Profile.create(
+        {
+          full_name: data.name,
+          user_id: user.id,
+          avatar: data.picture,
+        },
+        {
+          transaction,
+        }
+      );
+
+      await transaction.commit();
     }
 
     const token = await saveTokenUser(user);
@@ -75,31 +90,47 @@ export const googleLoginCallback = async (code) => {
       token,
     };
   } catch (error) {
+    await transaction.rollback();
     throw new Error(error.message);
   }
 };
 
 export const registerUser = async (name, email, password, role) => {
+  const transaction = await Sequelize.transaction();
+
   const salt = await bcrypt.genSalt();
   const hashPassword = await bcrypt.hash(password, salt);
 
   try {
-    const user = await User.create({
-      name,
-      email,
-      password: hashPassword,
-      role,
-    });
+    const user = await User.create(
+      {
+        name,
+        email,
+        password: hashPassword,
+        role,
+      },
+      {
+        transaction,
+      }
+    );
 
-    await Profile.create({
-      user_id: user.id,
-    });
+    await Profile.create(
+      {
+        user_id: user.id,
+      },
+      {
+        transaction,
+      }
+    );
+
+    await transaction.commit();
 
     return {
       status: 201,
       message: "User created successfully",
     };
   } catch (error) {
+    await transaction.rollback();
     if (error.name === "SequelizeUniqueConstraintError") {
       throw new Error("Email already used");
     } else {
