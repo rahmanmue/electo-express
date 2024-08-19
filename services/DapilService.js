@@ -115,7 +115,7 @@ export const filterDapilByKeyword = async (
         ],
       };
       const dapil = await Dapil.findAll(queryOptions);
-      const totalItems = dapil.length;
+      const totalItems = await Dapil.count({ where: queryOptions.where });
       return {
         status: 200,
         data: dapil,
@@ -153,7 +153,33 @@ export const filterDapilByKeyword = async (
     };
 
     const dapil = await Dapil.findAll(queryOptions);
-    const totalItems = await Dapil.count({ where: { user_id: user.id } });
+    const totalItems = await Dapil.count({
+      where: {
+        user_id: user.id,
+        [Op.or]: [
+          {
+            daerah_pemilihan: {
+              [Op.like]: `%${keyword}%`,
+            },
+          },
+          {
+            kabupaten_kota: {
+              [Op.like]: `%${keyword}%`,
+            },
+          },
+          {
+            provinsi: {
+              [Op.like]: `%${keyword}%`,
+            },
+          },
+          {
+            alokasi_kursi: {
+              [Op.like]: `%${keyword}%`,
+            },
+          },
+        ],
+      },
+    });
     return {
       status: 200,
       data: dapil,
