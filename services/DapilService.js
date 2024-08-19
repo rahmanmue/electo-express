@@ -115,7 +115,7 @@ export const filterDapilByKeyword = async (
         ],
       };
       const dapil = await Dapil.findAll(queryOptions);
-      const totalItems = await Dapil.count();
+      const totalItems = dapil.length;
       return {
         status: 200,
         data: dapil,
