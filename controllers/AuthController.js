@@ -15,16 +15,15 @@ export const loginGoogleCallback = async (req, res) => {
   try {
     const code = req.query.code;
 
-    const { status, token } = await googleLoginCallback(code);
+    const { token } = await googleLoginCallback(code);
 
     res.cookie("refreshToken", token.refreshToken, {
       httpOnly: true,
       maxAge: process.env.MAX_AGE_COOKIE * 60 * 60 * 1000,
     });
 
-    res.status(status).json({
-      accessToken: token.accessToken,
-    });
+    const redirectUrl = `${process.env.FRONTEND_URL}/google/callback?accessToken=${token.accessToken}`;
+    res.redirect(redirectUrl);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
