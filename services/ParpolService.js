@@ -58,7 +58,7 @@ export const filterParpolByKeyword = async (
     where: {
       [Op.or]: {
         name: {
-          [Op.like]: `%${keyword}%`,
+          [Op.iLike]: `%${keyword}%`,
         },
       },
     },

@@ -94,24 +94,29 @@ export const filterDapilByKeyword = async (
         [Op.or]: [
           {
             daerah_pemilihan: {
-              [Op.like]: `%${keyword}%`,
+              [Op.iLike]: `%${keyword}%`,
             },
           },
           {
             kabupaten_kota: {
-              [Op.like]: `%${keyword}%`,
+              [Op.iLike]: `%${keyword}%`,
             },
           },
           {
             provinsi: {
-              [Op.like]: `%${keyword}%`,
+              [Op.iLike]: `%${keyword}%`,
             },
           },
-          {
-            alokasi_kursi: {
-              [Op.like]: `%${keyword}%`,
-            },
-          },
+          // Cek apakah keyword bisa dikonversi menjadi angka sebelum mencari di alokasi_kursi
+          ...(isNaN(Number(keyword))
+            ? [] // Jika keyword bukan angka, jangan tambahkan kondisi ini
+            : [
+                {
+                  alokasi_kursi: {
+                    [Op.eq]: Number(keyword),
+                  },
+                },
+              ]),
         ],
       };
       const dapil = await Dapil.findAll(queryOptions);
@@ -131,24 +136,29 @@ export const filterDapilByKeyword = async (
       [Op.or]: [
         {
           daerah_pemilihan: {
-            [Op.like]: `%${keyword}%`,
+            [Op.iLike]: `%${keyword}%`,
           },
         },
         {
           kabupaten_kota: {
-            [Op.like]: `%${keyword}%`,
+            [Op.iLike]: `%${keyword}%`,
           },
         },
         {
           provinsi: {
-            [Op.like]: `%${keyword}%`,
+            [Op.iLike]: `%${keyword}%`,
           },
         },
-        {
-          alokasi_kursi: {
-            [Op.like]: `%${keyword}%`,
-          },
-        },
+        // Cek apakah keyword bisa dikonversi menjadi angka sebelum mencari di alokasi_kursi
+        ...(isNaN(Number(keyword))
+          ? [] // Jika keyword bukan angka, jangan tambahkan kondisi ini
+          : [
+              {
+                alokasi_kursi: {
+                  [Op.eq]: Number(keyword),
+                },
+              },
+            ]),
       ],
     };
 
@@ -159,24 +169,29 @@ export const filterDapilByKeyword = async (
         [Op.or]: [
           {
             daerah_pemilihan: {
-              [Op.like]: `%${keyword}%`,
+              [Op.iLike]: `%${keyword}%`,
             },
           },
           {
             kabupaten_kota: {
-              [Op.like]: `%${keyword}%`,
+              [Op.iLike]: `%${keyword}%`,
             },
           },
           {
             provinsi: {
-              [Op.like]: `%${keyword}%`,
+              [Op.iLike]: `%${keyword}%`,
             },
           },
-          {
-            alokasi_kursi: {
-              [Op.like]: `%${keyword}%`,
-            },
-          },
+          // Cek apakah keyword bisa dikonversi menjadi angka sebelum mencari di alokasi_kursi
+          ...(isNaN(Number(keyword))
+            ? [] // Jika keyword bukan angka, jangan tambahkan kondisi ini
+            : [
+                {
+                  alokasi_kursi: {
+                    [Op.eq]: Number(keyword),
+                  },
+                },
+              ]),
         ],
       },
     });
