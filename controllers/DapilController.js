@@ -2,10 +2,20 @@ import {
   findAllDapilByRole,
   filterDapilByKeyword,
   findDapilById,
+  findAllDapil,
   saveDapil,
   updateDapil,
   deleteDapil,
 } from "../services/DapilService.js";
+
+export const getAllDapilForHome = async (req, res) => {
+  try {
+    const dapils = await findAllDapil();
+    res.status(dapils.status).json(dapils);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 export const getAllDapil = async (req, res) => {
   try {

@@ -1,22 +1,37 @@
 import {
   findAllUsers,
-  findUserById,
+  findUserByRToken,
+  filterUserByKeyword,
   updateUser,
   deleteUser,
 } from "../services/UserService.js";
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await findAllUsers();
+    const page = req.query.page;
+    const pageSize = req.query.pageSize;
+    const users = await findAllUsers(page, pageSize);
     res.status(users.status).json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-export const getUserById = async (req, res) => {
+export const searchUser = async (req, res) => {
   try {
-    const user = await findUserById(req.params.id);
+    const page = req.query.page;
+    const pageSize = req.query.pageSize;
+    const keyword = req.query.keyword;
+    const users = await filterUserByKeyword(keyword, page, pageSize);
+    res.status(users.status).json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getUserByToken = async (req, res) => {
+  try {
+    const user = await findUserByRToken(req.cookies.refreshToken);
     res.status(user.status).json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -25,7 +40,7 @@ export const getUserById = async (req, res) => {
 
 export const updateUserById = async (req, res) => {
   try {
-    const updated = await updateUser(req.body.id, req.body);
+    const updated = await updateUser(req.body);
     res.status(updated.status).json(updated);
   } catch (error) {
     res.status(500).json({ message: error.message });
