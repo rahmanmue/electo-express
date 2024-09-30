@@ -14,6 +14,8 @@ const fileFilter = (req, file, cb) => {
   const allowedFileTypes = [
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "application/vnd.ms-excel",
+    "application/wps-office.xlsx",
+    "Excel.application/wps-office.xlsx",
   ];
 
   if (allowedFileTypes.includes(file.mimetype)) {
