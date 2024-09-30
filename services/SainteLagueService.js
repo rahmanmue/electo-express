@@ -23,7 +23,7 @@ export const sainteLagueCalculation = (dataSuara, jumlahKursi) => {
 
         // simpan data dalam bentuk object
         let data = {
-          nama_parpol: dataSuara[i].nama_parpol,
+          namaParpol: dataSuara[i].nama_parpol,
           suaraSah: dataSuara[i].total_suara_sah,
           hasilSainteLague: hasilSainteLague,
           bagi: bagi,
@@ -51,7 +51,7 @@ export const sainteLagueCalculation = (dataSuara, jumlahKursi) => {
     let total = 0;
     for (let i = 0; i < sortedResult.length; i++) {
       if (i < jumlahKursi) {
-        if (sortedResult[i].nama_parpol === partai) {
+        if (sortedResult[i].namaParpol === partai) {
           total++;
         }
       }
@@ -79,7 +79,7 @@ export const sainteLagueCalculation = (dataSuara, jumlahKursi) => {
     obj = Object.assign(obj, {
       perolehanKursi: seatAcquisition(
         sortedResult,
-        calculationResults[i][0]?.nama_parpol,
+        calculationResults[i][0]?.namaParpol,
         jumlahKursi
       ),
     });
@@ -89,23 +89,23 @@ export const sainteLagueCalculation = (dataSuara, jumlahKursi) => {
   }
 
   // jumlah suara urutan terakhir
-  let lastRankVoteResult = sortedResult[jumlahKursi - 1]?.hasilSainteLague;
+  let passFinalVote = Number(sortedResult[jumlahKursi - 1]?.hasilSainteLague);
 
   // total suara sah
-  const totalValidVotes = dataSuara?.reduce((prev, curr) => {
+  const totalVotes = dataSuara?.reduce((prev, curr) => {
     return prev + curr.total_suara_sah;
   }, 0);
 
-  let voteThreshold = totalValidVotes * (4 / 100);
+  let voteThreshold = totalVotes * (4 / 100);
 
   return {
     status: 200,
     data: {
-      finalResults,
-      lastRankVoteResult,
-      totalValidVotes,
+      results: finalResults,
+      passFinalVote,
+      totalVotes,
       voteThreshold,
-      sortedResult,
+      // sortedResult,
     },
   };
 };

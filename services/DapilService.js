@@ -2,6 +2,27 @@ import Dapil from "../models/DapilModel.js";
 import User from "../models/UserModel.js";
 import { Op } from "sequelize";
 
+export const findAllDapil = async () => {
+  try {
+    const dapils = await Dapil.findAll({
+      attributes: [
+        "id",
+        "daerah_pemilihan",
+        "kabupaten_kota",
+        "provinsi",
+        "tahun",
+      ],
+    });
+
+    return {
+      status: 200,
+      data: dapils,
+    };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 export const findAllDapilByRole = async (
   refreshToken,
   page = 1,
@@ -209,19 +230,20 @@ export const filterDapilByKeyword = async (
 };
 
 export const findDapilById = async (idDapil) => {
-  const dapil = await Dapil.findOne(
-    {
-      attributes: [
-        "id",
-        "daerah_pemilihan",
-        "kabupaten_kota",
-        "provinsi",
-        "tahun",
-        "alokasi_kursi",
-      ],
-    },
-    { where: { id: idDapil } }
-  );
+  console.log(idDapil);
+  const dapil = await Dapil.findOne({
+    attributes: [
+      "id",
+      "daerah_pemilihan",
+      "kabupaten_kota",
+      "provinsi",
+      "tahun",
+      "alokasi_kursi",
+    ],
+    where: { id: idDapil },
+  });
+
+  // console.log(JSON.stringify(dapil));
 
   return {
     status: 200,

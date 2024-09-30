@@ -98,7 +98,7 @@ export const jsonToExcelParpol = async () => {
     attributes: [["name", "nama_parpol"]],
   });
 
-  console.log(JSON.stringify(parpol));
+  // console.log(JSON.stringify(parpol));
 
   const excelHeader = [["nama_parpol", "total_suara_sah"]];
   const worksheet = XLSX.utils.json_to_sheet(

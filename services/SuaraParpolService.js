@@ -1,22 +1,35 @@
 import SuaraParpol from "../models/SuaraParpolModel.js";
 import path from "path";
 import { validateExcelFile } from "./ExcelValidationService.js";
+import Parpol from "../models/ParpolModel.js";
 import fs from "fs";
 
 export const saveFromExcel = async (data) => {
   try {
+    const parpol = await Parpol.findAll({
+      attributes: ["name"],
+    });
+
+    const filteredParpol = parpol.map((item) => item.name);
+
     const filePath = path.join(
       process.cwd(),
       process.env.UPLOAD_DIR,
       data.fileName
     );
     const tempData = validateExcelFile(filePath);
-    const objData = tempData.map((item) => {
-      return {
-        ...item,
-        daerah_pemilihan_id: data.id_dapil,
-      };
-    });
+    const objData = tempData
+      .map((item) => {
+        if (filteredParpol.includes(item.nama_parpol)) {
+          return {
+            ...item,
+            daerah_pemilihan_id: data.id_dapil,
+          };
+        }
+      })
+      .filter((item) => item != null);
+
+    // console.log(JSON.stringify(objData));
 
     await SuaraParpol.bulkCreate(objData);
 

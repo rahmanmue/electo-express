@@ -8,6 +8,8 @@ export const validateExcelFile = (filePath) => {
 
   const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
+  // console.log(JSON.stringify(jsonData));
+
   if (jsonData.length == 0) throw new Error("File is empty");
 
   const headers = jsonData[0];
