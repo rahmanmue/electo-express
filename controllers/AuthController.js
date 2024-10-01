@@ -54,7 +54,7 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const { status, token, role } = await loginUser(email, password);
+    const { status, token } = await loginUser(email, password);
     res.cookie("refreshToken", token.refreshToken, {
       httpOnly: true,
       maxAge: process.env.MAX_AGE_COOKIE * 60 * 60 * 1000,
