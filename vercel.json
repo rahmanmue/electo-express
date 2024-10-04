@@ -10,6 +10,14 @@
     {
       "source": "/(.*)",
       "destination": "/api/index.js"
+    },
+    {
+      "source": "/google",
+      "destination": "/api/google"
+    },
+    {
+      "source": "/google/callback",
+      "destination": "/api/google/callback"
     }
   ]
 }
