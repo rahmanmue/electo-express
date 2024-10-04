@@ -42,14 +42,14 @@ export const googleAuthorization = (req) => {
 export const googleLoginCallback = async (req, code) => {
   const transaction = await db.transaction();
   try {
-    const oauth2Client = oauth2Client(req);
+    const oauth = oauth2Client(req);
 
-    const { tokens } = await oauth2Client.getToken(code);
+    const { tokens } = await oauth.getToken(code);
 
-    oauth2Client.setCredentials(tokens);
+    oauth.setCredentials(tokens);
 
     const oauth2 = google.oauth2({
-      auth: oauth2Client,
+      auth: oauth,
       version: "v2",
     });
 
