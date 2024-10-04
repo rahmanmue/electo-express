@@ -35,14 +35,17 @@ const saveTokenUser = async (data) => {
   return { accessToken, refreshToken };
 };
 
-export const googleAuthorization = () => {
-  return authorizationUrl;
+export const googleAuthorization = (req) => {
+  return authorizationUrl(req);
 };
 
-export const googleLoginCallback = async (code) => {
+export const googleLoginCallback = async (req, code) => {
   const transaction = await db.transaction();
   try {
+    const oauth2Client = oauth2Client(req);
+
     const { tokens } = await oauth2Client.getToken(code);
+
     oauth2Client.setCredentials(tokens);
 
     const oauth2 = google.oauth2({

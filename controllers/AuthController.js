@@ -8,14 +8,14 @@ import {
 } from "../services/AuthService.js";
 
 export const loginGoogle = (req, res) => {
-  res.redirect(googleAuthorization());
+  res.redirect(googleAuthorization(req));
 };
 
 export const loginGoogleCallback = async (req, res) => {
   try {
     const code = req.query.code;
 
-    const { token } = await googleLoginCallback(code);
+    const { token } = await googleLoginCallback(req, code);
 
     res.cookie("refreshToken", token.refreshToken, {
       httpOnly: true,
