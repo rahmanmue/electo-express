@@ -19,6 +19,8 @@ export const loginGoogleCallback = async (req, res) => {
 
     res.cookie("refreshToken", token.refreshToken, {
       httpOnly: true,
+      secure: true, // Pastikan secure diaktifkan di HTTPS
+      sameSite: "None", // Untuk cross-origin
       maxAge: process.env.MAX_AGE_COOKIE * 60 * 60 * 1000,
     });
 
@@ -57,6 +59,8 @@ export const login = async (req, res) => {
     const { status, token } = await loginUser(email, password);
     res.cookie("refreshToken", token.refreshToken, {
       httpOnly: true,
+      secure: true, // Pastikan secure diaktifkan di HTTPS
+      sameSite: "None", // Untuk cross-origin
       maxAge: process.env.MAX_AGE_COOKIE * 60 * 60 * 1000,
     });
     res.status(status).json({
