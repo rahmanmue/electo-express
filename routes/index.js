@@ -68,9 +68,9 @@ router.delete("/auth/logout", logout);
 // router.patch("/users", updateUserById);
 // router.delete("/users/:id", deleteUserById);
 
-router.get("/users", verifyToken, verifyAdmin, getAllUsers);
+router.get("/users", verifyToken, getAllUsers);
 router.get("/users/search", verifyToken, verifyAdmin, searchUser);
-router.get("/user", verifyToken, verifyAdmin, getUserByToken);
+router.get("/user", verifyToken, getUserByToken);
 router.patch("/users", verifyToken, updateUserById);
 router.delete("/users/:id", verifyToken, verifyAdmin, deleteUserById);
 
