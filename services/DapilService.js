@@ -4,7 +4,7 @@ import { Op } from "sequelize";
 
 export const findAllDapil = async () => {
   try {
-    const dapils = await Dapil.findAll({
+    const data = await Dapil.findAll({
       attributes: [
         "id",
         "daerah_pemilihan",
@@ -12,6 +12,13 @@ export const findAllDapil = async () => {
         "provinsi",
         "tahun",
       ],
+    });
+
+    const dapils = data.map((dapil) => {
+      return {
+        value: dapil.id,
+        item: `[${dapil.provinsi}]-[${dapil.kabupaten_kota}]-[${dapil.daerah_pemilihan}]-[${dapil.tahun}]`,
+      };
     });
 
     return {
