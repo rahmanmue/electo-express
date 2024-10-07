@@ -25,7 +25,6 @@ export const loginGoogleCallback = async (req, res) => {
     });
 
     const redirectUrl = `${process.env.FRONTEND_URL}/google/callback?accessToken=${token.accessToken}`;
-    console.log("Redirecting to frontend:", redirectUrl);
     res.redirect(redirectUrl);
   } catch (error) {
     res.status(500).json({ message: error.message });

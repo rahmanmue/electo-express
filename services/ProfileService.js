@@ -2,6 +2,7 @@ import Profile from "../models/ProfileModel.js";
 import User from "../models/UserModel.js";
 import path from "path";
 import fs from "fs";
+import { uploadAvatar, deleteAvatar } from "./FirebaseService.js";
 
 export const findProfile = async (refreshToken) => {
   const user = await User.findOne({
@@ -76,4 +77,31 @@ export const getAvatar = (avatar) => {
       });
     });
   });
+};
+
+export const updateProfileWithFirebase = async (data) => {
+  try {
+    const profile = await Profile.findOne({ where: { user_id: data.user_id } });
+
+    if (!profile) throw new Error("Profile not found");
+
+    if (data.avatar) {
+      const previousAvatar = profile.avatar;
+      const newAvatar = await uploadAvatar(data.avatar);
+      profile.avatar = newAvatar;
+
+      if (previousAvatar !== null) {
+        await deleteAvatar(previousAvatar);
+      }
+    }
+    profile.full_name = data.full_name;
+    profile.save();
+
+    return {
+      status: 200,
+      message: "Profile updated",
+    };
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };

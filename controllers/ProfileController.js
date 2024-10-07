@@ -2,6 +2,7 @@ import {
   updateProfile,
   getAvatar,
   findProfile,
+  updateProfileWithFirebase,
 } from "../services/ProfileService.js";
 
 export const getProfileUser = async (req, res) => {
@@ -55,5 +56,24 @@ export const getImageAvatar = async (req, res) => {
       });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateProfileFirebase = async (req, res) => {
+  try {
+    const data = {
+      user_id: req.body.userId,
+      full_name: req.body.full_name,
+      avatar: req.file ?? null,
+    };
+
+    const updated = await updateProfileWithFirebase(data);
+    res.status(updated.status).json(updated);
+  } catch (error) {
+    if (error.message === "Profile not found") {
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: error.message });
+    }
   }
 };

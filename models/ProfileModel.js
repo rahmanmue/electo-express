@@ -22,7 +22,7 @@ const Profile = db.define(
       allowNull: true,
     },
     avatar: {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
       allowNull: true,
     },
   },

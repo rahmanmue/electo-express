@@ -43,6 +43,7 @@ import {
 } from "../controllers/SuaraParpolController.js";
 import {
   updateProfileUser,
+  updateProfileFirebase,
   getImageAvatar,
   getProfileUser,
 } from "../controllers/ProfileController.js";
@@ -54,6 +55,7 @@ import {
 import { verifyToken, verifyAdmin } from "../middlewares/authMiddleware.js";
 import upload from "../middlewares/uploadMiddleware.js";
 import uploadExcel from "../middlewares/uploadExcelMiddleware.js";
+import { uploadMemory } from "../middlewares/uploadMemoryMiddleware.js";
 
 const router = express.Router();
 
@@ -126,6 +128,13 @@ router.put(
   upload.single("avatar"),
   verifyToken,
   updateProfileUser
+);
+
+router.put(
+  "/update-profile-firebase",
+  uploadMemory.single("avatar"),
+  verifyToken,
+  updateProfileFirebase
 );
 
 router.post("/import-excel", uploadExcel.single("document"), importFromExcel);
