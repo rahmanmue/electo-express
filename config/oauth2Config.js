@@ -6,11 +6,11 @@ const scopes = [
 ];
 
 export const oauth2Client = (req) => {
-  const protocol = req.headers["x-forwarded-proto"] || req.protocol;
+  // const protocol = req.headers["x-forwarded-proto"] || req.protocol;
   return new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,
-    `${protocol}://${req.get("host")}/${process.env.REDIRECT_URI}`
+    process.env.REDIRECT_URI
   );
 };
 
