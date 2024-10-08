@@ -1,8 +1,39 @@
 import SuaraParpol from "../models/SuaraParpolModel.js";
 import path from "path";
-import { validateExcelFile } from "./ExcelValidationService.js";
+import { validateExcelFile, validateExcel } from "./ExcelValidationService.js";
 import Parpol from "../models/ParpolModel.js";
 import fs from "fs";
+
+export const saveExcel = async (data) => {
+  try {
+    const parpol = await Parpol.findAll({
+      attributes: ["name"],
+    });
+
+    const filteredParpol = parpol.map((item) => item.name);
+
+    const tempData = validateExcel(data.file);
+    const objData = tempData
+      .map((item) => {
+        if (filteredParpol.includes(item.nama_parpol)) {
+          return {
+            ...item,
+            daerah_pemilihan_id: data.id_dapil,
+          };
+        }
+      })
+      .filter((item) => item != null);
+
+    await SuaraParpol.bulkCreate(objData);
+
+    return {
+      status: 201,
+      message: "Data successfully created",
+    };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
 
 export const saveFromExcel = async (data) => {
   try {
@@ -28,8 +59,6 @@ export const saveFromExcel = async (data) => {
         }
       })
       .filter((item) => item != null);
-
-    // console.log(JSON.stringify(objData));
 
     await SuaraParpol.bulkCreate(objData);
 

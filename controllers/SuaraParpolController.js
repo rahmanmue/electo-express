@@ -3,11 +3,33 @@ import {
   findVoteById,
   saveBulkVote,
   saveFromExcel,
+  saveExcel,
   updateVote,
   deleteVote,
 } from "../services/SuaraParpolService.js";
 import { findDapilById } from "../services/DapilService.js";
 import { sainteLagueCalculation } from "../services/SainteLagueService.js";
+
+export const importExcel = async (req, res) => {
+  try {
+    const data = {
+      file: req.file ?? null,
+      id_dapil: req.body.id_dapil,
+    };
+
+    if (!req.file) return res.status(400).json({ message: "File not found" });
+
+    const response = await saveExcel(data);
+
+    res.status(response.status).json(response);
+  } catch (error) {
+    if (error.message === "File is empty") {
+      res.status(400).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: error.message });
+    }
+  }
+};
 
 export const importFromExcel = async (req, res) => {
   try {

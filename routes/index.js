@@ -34,6 +34,7 @@ import {
 } from "../controllers/ParpolController.js";
 import {
   importFromExcel,
+  importExcel,
   createBulkSuaraParpol,
   getSuaraParpolByDapilId,
   getSuaraParpolById,
@@ -55,7 +56,10 @@ import {
 import { verifyToken, verifyAdmin } from "../middlewares/authMiddleware.js";
 import upload from "../middlewares/uploadMiddleware.js";
 import uploadExcel from "../middlewares/uploadExcelMiddleware.js";
-import { uploadMemory } from "../middlewares/uploadMemoryMiddleware.js";
+import {
+  uploadAvatarMemory,
+  uploadExcelMemory,
+} from "../middlewares/uploadMemoryMiddleware.js";
 
 const router = express.Router();
 
@@ -132,12 +136,17 @@ router.put(
 
 router.put(
   "/update-profile-firebase",
-  uploadMemory.single("avatar"),
+  uploadAvatarMemory.single("avatar"),
   verifyToken,
   updateProfileFirebase
 );
 
 router.post("/import-excel", uploadExcel.single("document"), importFromExcel);
+router.post(
+  "/import-excel-temporary",
+  uploadExcelMemory.single("document"),
+  importExcel
+);
 
 // router.get("/profile", getProfileUser);
 router.get("/profile", verifyToken, getProfileUser);
