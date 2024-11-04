@@ -18,7 +18,7 @@ const key = {
 };
 
 admin.initializeApp({
-  credential: admin.credential.cert(key),
+  credential: admin.credential.cert(JSON.stringify(key)),
   storageBucket: "final-project-fullstack.appspot.com",
 });
 
