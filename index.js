@@ -1,15 +1,18 @@
 import express from "express";
-import db from "./config/database.js";
-import router from "./routes/index.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import User from "./models/UserModel.js";
-import Dapil from "./models/DapilModel.js";
-import SuaraParpol from "./models/SuaraParpolModel.js";
-import Profile from "./models/ProfileModel.js";
-import PasswordResetToken from "./models/ResetPasswordToken.js";
-import "./models/Association.js";
+import db from "./src/config/database.js";
+import User from "./src/models/UserModel.js";
+import Dapil from "./src/models/DapilModel.js";
+import SuaraParpol from "./src/models/SuaraParpolModel.js";
+import Profile from "./src/models/ProfileModel.js";
+import PasswordResetToken from "./src/models/ResetPasswordToken.js";
+import "./src/models/Association.js";
+import router from "./src/routes/index.js";
+import handleErrorMiddleware from "./src/middlewares/errorHandlerMiddleware.js";
+import morgan from "morgan";
+import logger from "./src/utils/logger.js";
 
 dotenv.config();
 const app = express();
@@ -22,16 +25,18 @@ app.use(
   })
 );
 app.use(cookieParser());
+app.use(morgan("combined"));
 app.use(express.json());
 app.use(router);
+app.use(handleErrorMiddleware);
 
 const main = async () => {
   try {
-    await db.sync();
-    console.log("Database connected");
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    // await db.sync();
+    logger.info("Database connected");
+    app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
   } catch (err) {
-    console.log(err);
+    logger.error(err.message);
   }
 };
 
