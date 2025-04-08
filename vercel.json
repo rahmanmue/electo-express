@@ -2,22 +2,22 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/index.js",
+      "src": "src/api/index.js",
       "use": "@vercel/node"
     }
   ],
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/api/index.js"
+      "destination": "/src/api/index.js"
     },
     {
       "source": "/google",
-      "destination": "/api/google"
+      "destination": "/src/api/google"
     },
     {
       "source": "/google/callback",
-      "destination": "/api/google/callback"
+      "destination": "/src/api/google/callback"
     }
   ]
 }
